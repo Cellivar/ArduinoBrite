@@ -1,0 +1,2 @@
+#!/bin/bash
+./infowrite -w "ROLL RIGHT" -t "\8===========D/" -w "ROLL LEFT" -t "" -l 0

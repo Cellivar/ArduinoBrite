@@ -1,0 +1,59 @@
+# This program provides an API in python for little infosys. The concept is that you call the functions to build a packet. 
+# Dictionaries available
+COMMAND_CODES
+WRITE_MODES
+TYPE_CODES
+SPECIAL_FUNCTIONS
+KEYBOARD_PROTECT
+FILE_TYPES
+TIME_FORMATS
+# File label PRIORITY and 31 cannot be used as STRING labels
+# Labels 0 and PRIORITY are synonymous
+# If the counter feature is used, the file labels 17 through 21 are reserved for target files
+FILE_LABELS
+COLOR_STATUS
+# Only ALL TIMES, NO TIMES, and ALL DAY are implemented
+# All day entries are imlpemented
+START_STOP_TIMES
+
+# Constants available
+START_MODE
+DISPLAY_POSITION
+END_OF_TRANSMISSION
+END_OF_TEXT
+NULL
+START_OF_HEADER
+ADDRESS
+START_OF_TEXT
+
+# Packet functions
+void startPacket([address = Broadcast],[type],[port = /dev/ttyS0]) throws PacketLevelException
+void endPacket() throws PacketLevelException
+	# File functions
+	locking void startFile(label) throws PacketLevelException
+	void endFile() throws PacketLevelException
+		# Text in file functions
+		void addText([text],[mode]) throws PacketLevelException
+	# Special packet functions
+	locking void startSpecialFunction() throws PacketLevelException
+	void endSpecialFunction() throws PacketLevelException
+locking void clearMemoryConfig() throws PacketLevelException # This can be called outside of branch restrictions, or in branch level 1 or 2
+		locking void setDateTime(dateTime) throws PacketLevelException
+locking void softReset() throws PacketLevelException # This can be called outside of branch restrictions, or in branch level 1 or 2
+		locking void toggleSpeaker( [state = True] ) throws PacketLevelException
+		locking void setTimeFormat( [military = False] ) throws PacketLevelException
+		locking void startMemoryConfig() throws PacketLevelException
+		locking void endMemoryConfig() throws PacketLevelException
+			# The sizes include the mode chars. Depending on the mode, the number of chars will either be 1 or 2. Look in the dictionary
+			void addTextConfig( label, maxSize, startTime, stopTime, [kbdProtect = True] ) throws PacketLevelException
+			void addStringConfig( label, maxSize, [kbdProtect = True] ) throws PacketLevelException
+			void addDotsPictureConfig( label, pixelRows, pixelCols, [colorStatus = 8-color], [kbdProtect = True] ) throws PacketLevelException
+		locking void setRunTime( label, startTime, stopTime ) throws PacketLevelException
+		locking void setRunDay( label, startDay, stopDay ) throws PacketLevelException
+		locking void setSerialAddress( address ) throws PacketLevelException
+# Misc functions
+lock[] getLock()
+branch[] getLevel()
+void rawData( data ) throws PacketLevelException # This can be called outside of branch restrictions, or in branch level 1
+void clear() # Deletes all current stateful data held in the API... Resets you to defaults
+void end() # call end* recursivley till the packet is done... DO NOT CALL THIS IF A END* FUNCTION HAS MANDATORY PARAMATERS
